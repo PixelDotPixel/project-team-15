@@ -9,6 +9,10 @@ public class SquareCommand extends Square{
     @JsonProperty private int armorPoints;
 
     public SquareCommand() {
+        this.setColumn('A');
+        this.setRow(1);
+        armorPoints = 1;
+        numHits = 0;
     }
 
     public SquareCommand(int x, char y){
@@ -37,7 +41,7 @@ public class SquareCommand extends Square{
     }
 
 
-    public int getnumHits(){ return numHits; }
+    public int getNumHits(){ return numHits; }
 
     public int getarmorPoints(){ return armorPoints; }
 }

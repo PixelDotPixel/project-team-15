@@ -147,7 +147,7 @@ public class ShipTest {
 
     @Test
     public void testAttackSameSquareTwice() {
-        Ship minesweeper = new Ship("MINESWEEPER");
+        Ship minesweeper = new Ship_Minesweeper();
         minesweeper.place('A', 1, true);
         var result = minesweeper.attack(1, 'A');
         assertEquals(AtackStatus.SUNK, result.getResult());
@@ -165,32 +165,4 @@ public class ShipTest {
         assertEquals(minesweeper1.hashCode(), minesweeper2.hashCode());
     }
 
-    @Test
-    public void testSinkCommand() {
-        Ship Minesweeper = new Ship ("MINESWEEPER");
-        Ship Destroyer = new Ship("DESTROYER");
-        Ship BattleShip = new Ship("BATTLESHIP");
-
-        Minesweeper.place('A',1, true);
-        Destroyer.place('B',1, true);
-        BattleShip.place('C',1, true);
-
-        var result = Minesweeper.attack(1, 'A');
-        assertEquals(result.getResult(), AtackStatus.SUNK);
-
-        result = Destroyer.attack(1, 'B');
-        assertEquals(result.getResult(), AtackStatus.HIT);
-
-        result = Destroyer.attack(2, 'B');
-        assertEquals(result.getResult(), AtackStatus.MISS);
-        result = Destroyer.attack(2, 'B');
-        assertEquals(result.getResult(), AtackStatus.SUNK);
-
-        result = BattleShip.attack(3,'C');
-        assertEquals(result.getResult(), AtackStatus.MISS);
-        result = BattleShip.attack(3,'C');
-        assertEquals(result.getResult(), AtackStatus.SUNK);
-
-
-    }
 }

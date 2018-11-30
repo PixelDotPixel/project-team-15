@@ -2,20 +2,24 @@ package cs361.battleships.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import com.google.common.collect.Sets;
 import com.mchange.v1.util.CollectionUtils;
+import jdk.jshell.Snippet;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+@JsonTypeInfo(use=JsonTypeInfo.Id.CLASS, property="@class")
 
 public class Ship {
+
 
 	@JsonProperty private String kind;
 	@JsonProperty private List<Square> occupiedSquares;
 	@JsonProperty private int size;
-	@JsonProperty private SquareCommand CaptainModule;
+
 
 	public Ship() {
 		occupiedSquares = new ArrayList<>();
@@ -42,41 +46,11 @@ public class Ship {
 	}
 
 	public void place(char col, int row, boolean isVertical) {
-		int CommandLocation = -1;
-		int ArmourPoints = 0;
-		switch(kind) {
-			case "MINESWEEPER":
-				CommandLocation = 0;
-				break;
-			case "DESTROYER":
-				CommandLocation = 1;
-				break;
-			case "BATTLESHIP":
-				CommandLocation = 2;
-				break;
-		}
-
-		if(size >= 3){
-			ArmourPoints = 2;
-		} else {
-			ArmourPoints = 1;
-		}
-
-		for (int i=0; i<size; i++) {
+		for (int i=0; i< size; i++) {
 			if (isVertical) {
-				if(i == CommandLocation){
-					CaptainModule = new SquareCommand(row + i, col, ArmourPoints);
-					occupiedSquares.add(new Square(row + i, col));
-				} else {
-					occupiedSquares.add(new Square(row + i, col));
-				}
+				occupiedSquares.add(new Square(row+i, col));
 			} else {
-				if(i == CommandLocation){
-					CaptainModule = new SquareCommand(row, (char) (col + i), ArmourPoints);
-					occupiedSquares.add(new Square(row, (char) (col + i)));
-				} else {
-					occupiedSquares.add(new Square(row, (char) (col + i)));
-				}
+				occupiedSquares.add(new Square(row, (char) (col + i)));
 			}
 		}
 	}
@@ -103,14 +77,12 @@ public class Ship {
 			return new Result(attackedLocation);
 		}
 		var attackedSquare = square.get();
-		if(attackedSquare.getColumn() == CaptainModule.getColumn() && attackedSquare.getRow() == CaptainModule.getRow()){
-			attackedSquare = CaptainModule;
+
+		if (attackedSquare.isHit()) {
+			var result = new Result(attackedLocation);
+			result.setResult(AtackStatus.INVALID);
+			return result;
 		}
-//		if (attackedSquare.isHit()) {
-//			var result = new Result(attackedLocation);
-//			result.setResult(AtackStatus.INVALID);
-//			return result;
-//		}
 
 		attackedSquare.hit();
 		var result = new Result(attackedLocation);
@@ -134,11 +106,10 @@ public class Ship {
 				hit_check += 1;
 			}
 		}
-		if(hit_check == size || CaptainModule.getHit()){
+		if(hit_check == size){
 			return true;
 		}
 		return false;
-		//return getOccupiedSquares().stream().allMatch(s -> s.isHit());
 	}
 
 
@@ -165,5 +136,20 @@ public class Ship {
 	}
 
 	@JsonIgnore
-	public SquareCommand getCaptainModule() {return CaptainModule; }
+	public void setKind(String kindToset){
+		kind = kindToset;
+	}
+	@JsonIgnore
+	protected void setOccupiedSquares(List<Square> SquaresToTake){
+		occupiedSquares = SquaresToTake;
+	}
+	@JsonIgnore
+	protected void setSize(int sizeToset){
+		size = sizeToset;
+	}
+	@JsonIgnore
+	protected int getSize(){
+		return size;
+	}
+
 }
