@@ -135,7 +135,7 @@ function cellClick() {
             game = data;
             redrawGrid();
             placedShips++;
-            if (placedShips == 3) {
+            if (placedShips == 4) {
                 outputTextBox(4);
                 isSetup = false;
                 registerCellListener((e) => {});
@@ -254,6 +254,14 @@ function initGame() {
     });
     document.getElementById("place_battleship").addEventListener("click", function(e) {
         shipType = "BATTLESHIP";
+       registerCellListener(place(4));
+    });
+    document.getElementById("place_submarine").addEventListener("click", function(e) {
+        shipType = "SUBMARINE";
+       registerCellListener(place(4));
+    });
+    document.getElementById("place_submarine_s").addEventListener("click", function(e) {
+        shipType = "SUBMARINE_S";
        registerCellListener(place(4));
     });
     sendXhr("GET", "/game", {}, function(data) {
