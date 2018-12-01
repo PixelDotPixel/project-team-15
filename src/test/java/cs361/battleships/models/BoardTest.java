@@ -80,11 +80,12 @@ public class BoardTest {
     }
 
     @Test
-    public void testCantPlaceMoreThan3Ships() {
+    public void testCantPlaceMoreThan4Ships() {
         assertTrue(board.placeShip(new Ship("MINESWEEPER"), 1, 'A', true));
         assertTrue(board.placeShip(new Ship("BATTLESHIP"), 5, 'D', true));
         assertTrue(board.placeShip(new Ship("DESTROYER"), 6, 'A', false));
-        assertFalse(board.placeShip(new Ship(""), 8, 'A', false));
+        assertTrue(board.placeShip(new Ship_Submarine(false), 9, 'A', false));
+        assertFalse(board.placeShip(new Ship(""), 2, 'F', true));
 
     }
 
@@ -133,5 +134,27 @@ public class BoardTest {
         assertEquals(result.getResult(), AtackStatus.MISS);
         result = board.attack(3,'C');
         assertEquals(result.getResult(), AtackStatus.SURRENDER);
+    }
+
+    @Test
+    public void testSpaceLaser() {
+        System.out.println("STARTING SPACE LASER TEST: \n");
+
+        Ship_Submarine sub = new Ship_Submarine(true);
+        board.placeShip(new Ship_Minesweeper(), 1, 'A', true);
+        assertTrue(board.placeShip(new Ship_Destroyer(), 1, 'B', true));
+        assertTrue(board.placeShip(sub, 5, 'F', false));
+        
+
+        var result = board.attack(5, 'F');
+        assertEquals(AtackStatus.MISS, result.getResult());
+
+        result = board.attack(2,'B');
+        assertEquals(result.getResult(), AtackStatus.MISS);
+        result = board.attack(2,'B');
+        assertEquals(result.getResult(), AtackStatus.SUNK);
+
+        result = board.attack(5, 'F');
+        assertEquals(AtackStatus.HIT, result.getResult());
     }
 }

@@ -73,7 +73,17 @@ public class Ship {
 		return kind;
 	}
 
+	public Result spaceLaser(int x, char y) {
+		return this.attack(x, y, true);
+	}
+
 	public Result attack(int x, char y) {
+		return this.attack(x, y, false);
+	}
+
+	private Result attack(int x, char y, boolean penetration) {
+		// TODO - refactor to use property of ship, not just the kind
+
 		var attackedLocation = new Square(x, y);
 		var square = getOccupiedSquares().stream().filter(s -> s.equals(attackedLocation)).findFirst();
 		if (!square.isPresent()) {
@@ -100,16 +110,9 @@ public class Ship {
 		return result;
 	}
 
-
 	@JsonIgnore
 	public boolean isSunk() {
-		int hit_check = 0;
-		for (int i = 0; i < size; i++) {
-			if(this.occupiedSquares.get(i).getHit()){
-				hit_check += 1;
-			}
-		}
-		if(hit_check == size){
+		if(this.occupiedSquares.stream().allMatch(square -> square.getHit())){
 			return true;
 		}
 		return false;
