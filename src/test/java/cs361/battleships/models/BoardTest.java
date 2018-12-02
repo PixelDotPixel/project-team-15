@@ -138,6 +138,8 @@ public class BoardTest {
 
     @Test
     public void testSpaceLaser() {
+        System.out.println("STARTING SPACE LASER TEST: \n");
+
         Ship_Submarine sub = new Ship_Submarine(true);
         board.placeShip(new Ship_Minesweeper(), 1, 'A', true);
         assertTrue(board.placeShip(new Ship_Destroyer(), 1, 'B', true));
